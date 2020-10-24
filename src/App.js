@@ -493,13 +493,11 @@ formatIsraeliDate(date) {
     return (
 
       <div className="App" >
-  
-
         <div>
+        <h1>לאן נטייל מחר?</h1>
+         <h2>זמינות פארקים לאומיים</h2>
         <Navbar bg="light" variant="light">
-               <a className ="hyperLink"  style={{marginLeft:"auto", marginRight: "auto"}} href="https://www.parks.org.il/%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA-%D7%9C%D7%90%D7%AA%D7%A8%D7%99%D7%9D/">
-                  לאתר רשות הטבע והגנים לחץ כאן
-               </a>
+               
           {/* <Form inline>
             <Button variant="outline-info" onClick={randomClicked}>הגרל אתר שפנוי היום</Button>
           </Form> */}
@@ -512,11 +510,14 @@ formatIsraeliDate(date) {
           //<p>You clicked {this.state.selectedDay.toLocaleDateString()}</p>
           <p>מציג אתרים הזמינים בתאריך:  {this.formatIsraeliDate(this.state.selectedDay)}</p>
              : 
-          <h6 style ={{ color:"#D35400"}}>אנא בחר תאריך לבדיקת זמינות</h6>
+          <h6 style ={{ color:"#D35400"}}>אנא בחרו תאריך לבדיקת זמינות</h6>
         }
       </div>
 
       <div>
+         <Container>
+               <Row>
+                  <Col>
         {
           !this.state.view ?
               <ClipLoader
@@ -531,6 +532,11 @@ formatIsraeliDate(date) {
          {
             this.state.formatDate.length > 0?
                <div>
+                  <div>
+                     <h4 className="d-block">
+                      סינון לפי איזור:  
+                     </h4>
+                  </div>
                   <ButtonGroup toggle className="mb-2">
                   
                   <ToggleButton
@@ -584,11 +590,7 @@ formatIsraeliDate(date) {
                               : this.setState({south: e.currentTarget.checked})  }>
                            <a class="region"> דרום</a>
                      </ToggleButton>
-                     <h4>
-                  : סינון לפי איזור
-
-                  </h4>
-                     </ButtonGroup>
+                  </ButtonGroup>
                </div>
             : null
          }
@@ -656,8 +658,22 @@ formatIsraeliDate(date) {
 
         }
 
+</Col>
+            </Row>
+         </Container>
         </div>
 
+         <footer className="my-4 py-4 bg-light container-fluid text-info">
+            <Container>
+               <Row>
+                  <Col>
+                     <div>🏕️ לאן נטייל מחר הוא פרוייקט מהיר שנבנה בעקבות ציוץ של <a href="https://twitter.com/amsterdamski2/status/1319278880281169921" target="_blank">@amsterdamski2</a> בטוויטר</div>
+                     <div>👨‍💻 הפרוייקט בקוד פתוח! מוזמנות ומוזמנים להציע הארות והערות <a href="https://github.com/NivRichter/park_n_recs" target="_blank">בעמוד הגיטהאב של הפרוייקט</a></div>
+                  </Col>
+               </Row>
+            </Container>
+         </footer>
+         
       </div>
     );
   }
