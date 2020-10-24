@@ -1,18 +1,14 @@
 import React, { Component, useState } from "react";
 import logo from './logo.svg';
-import './App.css';
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
-import ClipLoader from "react-spinners/ClipLoader";
-
-import "bootstrap/dist/css/bootstrap.css";
-import 'react-day-picker/lib/style.css';
-
 import MomentLocaleUtils from 'react-day-picker/moment';
+import 'moment/locale/he'
 
-// Make sure moment.js has the required locale data
-import 'moment/locale/he';
-
+import ClipLoader from "react-spinners/ClipLoader";
+import "bootstrap/dist/css/bootstrap.css";
+// import 'react-day-picker/lib/style.css';
+import './App.css';
 
 import {
   Button,
@@ -49,6 +45,7 @@ class App extends Component {
       avilableSites:{},
       selectedDay: undefined,
       formatDate: "",
+      locale: 'he',
       north: true,
       south: true,
       Jerusalem: true,
@@ -472,6 +469,7 @@ formatIsraeliDate(date) {
 
 
 
+
     for ( let id in avilableSites){
       if(this.state.avilableSites[id]["region"]){
          let name = avilableSites[id]["name"]
@@ -480,7 +478,7 @@ formatIsraeliDate(date) {
          if (this.state[region]){
             let background = this.state.picturesDB[id]?.image?.[1]?.url || this.state.picturesDB[id]?.image?.[2]?.url || this.state.picturesDB[id]?.image?.[3]?.url 
             sitesTable[region].push (
-               <div className="card w3-blue" style={{ 
+               <div className="card w3-blue" key={id} style={{ 
                   backgroundImage:"url("+background+")"
                }} > <a className ="hyperLink" href={url}>{name} </a></div>
         )
@@ -493,182 +491,207 @@ formatIsraeliDate(date) {
     return (
 
       <div className="App" >
-        <div>
-        <h1>לאן נטייל מחר?</h1>
-         <h2>זמינות פארקים לאומיים</h2>
-        <Navbar bg="light" variant="light">
-               
-          {/* <Form inline>
-            <Button variant="outline-info" onClick={randomClicked}>הגרל אתר שפנוי היום</Button>
-          </Form> */}
-      </Navbar>
-        </div>
 
-        <div style ={{ backgroundColor:"#FEF9E7", marginLeft:"auto", marginRight:"auto", width:"auto"}}>
-        <DayPicker  disabledDays={{ before: today , after: fortnightAway}}  onDayClick={this.handleDayClick}  />
-        {this.state.selectedDay ? 
-          //<p>You clicked {this.state.selectedDay.toLocaleDateString()}</p>
-          <p>מציג אתרים הזמינים בתאריך:  {this.formatIsraeliDate(this.state.selectedDay)}</p>
-             : 
-          <h6 style ={{ color:"#D35400"}}>אנא בחרו תאריך לבדיקת זמינות</h6>
-        }
-      </div>
+         <Container fluid className="text-light bg-teva-green py-3">
+           <Row>
+              <Col>
+                  <h1>לאן נטייל מחר? 🏕️</h1>
+                  <h2>זמינות שמורות טבע ופארקים לאומיים</h2>
+              </Col>
+           </Row>
+        </Container>
 
-      <div>
-         <Container>
-               <Row>
-                  <Col>
-        {
-          !this.state.view ?
-              <ClipLoader
-              size={100 }
-              color={"#123abc"}
-              loading={true}
-                />    
-          :
-          <div>
-           
-           <div>
-         {
-            this.state.formatDate.length > 0?
-               <div>
-                  <div>
-                     <h4 className="d-block">
-                      סינון לפי איזור:  
-                     </h4>
+         <Navbar className="bg-teva-lime">
+            <Nav className="mx-auto justify-content-center">
+               <Nav.Link active href="">חיפוש תאריך</Nav.Link>
+               <Nav.Link disabled href="">תצוגת טבלה (בקרוב!)</Nav.Link>
+               {/* <Button variant="outline-info" onClick={randomClicked}>הגרל אתר שפנוי היום</Button> */}
+            </Nav>
+         </Navbar>
+
+         <Container fluid className="bg-teva-sand">
+            <Row>
+               <Col>
+                  <div className="py-2">
+                     <DayPicker
+                        disabledDays={{ before: today , after: fortnightAway}} 
+                        modifiers={ {selectedDay: this.state.selectedDay} }
+                        onDayClick={this.handleDayClick}
+                        localeUtils={MomentLocaleUtils} 
+                        locale={this.state.locale}/>
+                     {this.state.selectedDay ? 
+                        //<p>You clicked {this.state.selectedDay.toLocaleDateString()}</p>
+                        <div className="alert alert-warning">
+                        <strong className="d-blockalert">מציג אתרים הזמינים בתאריך:  {this.formatIsraeliDate(this.state.selectedDay)}</strong>
+                        </div>
+                           : 
+                        <h6 style ={{ color:"#D35400"}}>אנא בחרו תאריך לבדיקת זמינות</h6>
+                     }
                   </div>
-                  <ButtonGroup toggle className="mb-2">
-                  
-                  <ToggleButton
-                           className="Btn-region"
-                           type="checkbox"
-                           variant="secondary"
-                           checked={checkedN}
-                           value="1"
-                           onChange={(e) => this.state.first? 
-                                                   this.setState({first:false, north: true, Jerusalem:false,center:false, south:false}) 
-                                                   : this.setState({north: e.currentTarget.checked})          
-                                       }
-                           >
-                           <p class="region"> צפון</p>
-                     </ToggleButton>
-
-                     <ToggleButton
-                           className="Btn-region"
-
-                           type="checkbox"
-                           variant="secondary"
-                           checked={checkedJ}
-                           value="2"
-                           onChange={(e) => this.state.first? 
-                              this.setState({first:false, north: false, Jerusalem:true,center:false, south:false}) 
-                              : this.setState({Jerusalem: e.currentTarget.checked})  }>
-                           <a class="region"> ירושלים</a>
-                     </ToggleButton>
-
-                     <ToggleButton
-                     className="Btn-region"
-                           type="checkbox"
-                           variant="secondary"
-                           checked={checkedC}
-                           value="3"
-                           onChange={(e) =>this.state.first? 
-                              this.setState({first:false, north: false, Jerusalem:false,center:true, south:false}) 
-                              : this.setState({center: e.currentTarget.checked})  }>
-                        <a class="region"> מרכז</a>
-
-                     </ToggleButton>
-
-                     <ToggleButton
-                     className="Btn-region"
-                           type="checkbox"
-                           variant="secondary"
-                           checked={checkedS}
-                           value="4"
-                           onChange={(e) =>this.state.first? 
-                              this.setState({first:false, north: false, Jerusalem:false,center:false, south:true}) 
-                              : this.setState({south: e.currentTarget.checked})  }>
-                           <a class="region"> דרום</a>
-                     </ToggleButton>
-                  </ButtonGroup>
-               </div>
-            : null
-         }
-             
-            </div>
-
-
-
-               
-               {
-                  this.state.formatDate.length > 0 ?
-                  <div>
-                     <a className ="refToStie"  style={{marginLeft:"auto", marginRight: "auto", color: "white", textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"}} >
-                        למעבר להזמנת מקומות באתר רשות הטבע והגנים, לחץ על האתר המבוקש
-                     </a>
-                     <div style={{backgroundColor:'#bada55'}} >
-                        <a className="region">
-                           <h3>צפון</h3>
-                        </a>
-                   
-                     </div>
-                        <section class="basic-grid">
-                        {sitesTable["north"]}
-                  
-
-                        </section>
-                        <div style={{backgroundColor:'#bada55'}} >
-                           <a className="region">
-                              <h3>מרכז</h3>
-                           </a>
-                        </div>
-
-                        <section class="basic-grid">
-                        {sitesTable["center"]}
-
-                        </section>
-
-                        <div style={{backgroundColor:'#bada55'}} >
-                        <a className="region">
-                        <h3>ירושלים</h3>
-                        </a>
-                        </div>
-
-                        <section class="basic-grid">
-                        {sitesTable["Jerusalem"]}
-
-                        </section>
-
-                        <div style={{backgroundColor:'#bada55'}} >
-                        <a className="region">
-                            <h3>דרום</h3>
-                        </a>
-                        </div>
-                        <section class="basic-grid">
-                        {sitesTable["south"]}
-
-                        </section>
-                     </div>
-
-                  :
-                  null
-               }
-               
-            </div>
-
-        }
-
-</Col>
+               </Col>
             </Row>
          </Container>
-        </div>
 
-         <footer className="my-4 py-4 bg-light container-fluid text-info">
+
+      
+
+         <Container fluid className="bg-teva-sand">
+            <Row>
+               <Col>
+                  <Container>
+                     <Row>
+                        <Col>
+                        
+                        
+                           {
+                              !this.state.view ?
+                                 <ClipLoader
+                                 size={100 }
+                                 color={"#123abc"}
+                                 loading={true}
+                                    />    
+                              :
+                              <div>
+                              
+                              <div>
+                              {
+                                 this.state.formatDate.length > 0?
+                                    <div>
+                                       <div>
+                                          <h4 className="d-block">
+                                          סינון לפי איזור:  
+                                          </h4>
+                                       </div>
+                                       <ButtonGroup toggle className="my-2 d-flex">
+                                       
+                                          <ToggleButton
+                                                className="Btn-region"
+                                                type="checkbox"
+                                                variant="secondary"
+                                                checked={checkedN}
+                                                value="1"
+                                                onChange={(e) => this.state.first? 
+                                                                        this.setState({first:false, north: true, Jerusalem:false,center:false, south:false}) 
+                                                                        : this.setState({north: e.currentTarget.checked})          
+                                                            }
+                                                >
+                                                <a className="region">צפון</a>
+                                          </ToggleButton>
+
+                                          <ToggleButton
+                                                className="Btn-region"
+
+                                                type="checkbox"
+                                                variant="secondary"
+                                                checked={checkedJ}
+                                                value="2"
+                                                onChange={(e) => this.state.first? 
+                                                   this.setState({first:false, north: false, Jerusalem:true,center:false, south:false}) 
+                                                   : this.setState({Jerusalem: e.currentTarget.checked})  }>
+                                                <a className="region"> ירושלים</a>
+                                          </ToggleButton>
+
+                                          <ToggleButton
+                                          className="Btn-region"
+                                                type="checkbox"
+                                                variant="secondary"
+                                                checked={checkedC}
+                                                value="3"
+                                                onChange={(e) =>this.state.first? 
+                                                   this.setState({first:false, north: false, Jerusalem:false,center:true, south:false}) 
+                                                   : this.setState({center: e.currentTarget.checked})  }>
+                                             <a className="region"> מרכז</a>
+
+                                          </ToggleButton>
+
+                                          <ToggleButton
+                                          className="Btn-region"
+                                                type="checkbox"
+                                                variant="secondary"
+                                                checked={checkedS}
+                                                value="4"
+                                                onChange={(e) =>this.state.first? 
+                                                   this.setState({first:false, north: false, Jerusalem:false,center:false, south:true}) 
+                                                   : this.setState({south: e.currentTarget.checked})  }>
+                                                <a className="region"> דרום</a>
+                                          </ToggleButton>
+                                       </ButtonGroup>
+                                    </div>
+                                 : <div></div>
+                              }
+                                 
+                                 </div>
+
+
+
+                                    
+                                    {
+                                       this.state.formatDate.length > 0 ?
+                                       <div>
+                                          <div className="alert mt-4 alert-info">
+                                             <a className="refToStie" 
+                                                style={{marginLeft:"auto", marginRight: "auto"}} >
+                                                למעבר להזמנת מקומות באתר רשות הטבע והגנים, לחצו על האתר המבוקש
+                                             </a>
+                                          </div>
+
+                                          <div className="region bg-teva-lime mt-5 mb-2 py-2" >
+                                             <h3>צפון</h3>
+                                          </div>
+                                          <section className="basic-grid">
+                                             {sitesTable["north"]}
+                                          </section>
+
+                                          <div className="region bg-teva-lime mt-5 mb-2 py-2">
+                                             <h3>מרכז</h3>
+                                          </div>
+                                          <section className="basic-grid">
+                                             {sitesTable["center"]}
+                                          </section>
+
+                                          <div className="region bg-teva-lime mt-5 mb-2 py-2">
+                                             <h3>ירושלים</h3>
+                                          </div>
+                                          <section className="basic-grid">
+                                             {sitesTable["Jerusalem"]}
+                                          </section>
+
+                                          <div className="region bg-teva-lime mt-5 mb-2 py-2">
+                                             <h3>דרום</h3>
+                                          </div>
+                                          <section className="basic-grid">
+                                             {sitesTable["south"]}
+                                          </section>
+                                       </div>
+
+                                       :
+                                       null
+                                    }
+                                    
+                                 </div>
+
+                           }
+                        </Col>
+                     </Row>
+                  </Container>
+
+               </Col>
+            </Row>
+         </Container>
+        
+         <footer className="mt-auto py-4 bg-light container-fluid text-info">
             <Container>
                <Row>
                   <Col>
-                     <div>🏕️ לאן נטייל מחר הוא פרוייקט מהיר שנבנה בעקבות ציוץ של <a href="https://twitter.com/amsterdamski2/status/1319278880281169921" target="_blank">@amsterdamski2</a> בטוויטר</div>
-                     <div>👨‍💻 הפרוייקט בקוד פתוח! מוזמנות ומוזמנים להציע הארות והערות <a href="https://github.com/NivRichter/park_n_recs" target="_blank">בעמוד הגיטהאב של הפרוייקט</a></div>
+                     <div className="my-2">לכל אתרי התיירות ומידע נוסף -  <a href="https://www.parks.org.il/%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA-%D7%9C%D7%90%D7%AA%D7%A8%D7%99%D7%9D/" target="_blank"> אתר רשות הטבע והגנים </a></div>
+                     <div className="my-2">
+                        <span>🏕️ לאן נטייל מחר הוא קצרקוד (פרוייקט מהיר) שנבנה בעקבות  </span>
+                        <a href="https://twitter.com/amsterdamski2/status/1319278880281169921" target="_blank">ציוץ של @amsterdamski2</a>
+                     </div>
+                     <div className="my-2">
+                        <span>👨‍💻 הפרוייקט בקוד פתוח! מוזמנות ומוזמנים להציע הארות והערות </span>
+                        <a href="https://github.com/NivRichter/park_n_recs" target="_blank">בעמוד הגיטהאב של הפרוייקט</a>
+                     </div>
                   </Col>
                </Row>
             </Container>
