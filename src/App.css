@@ -76,9 +76,10 @@ body {
 .region {
   color: white;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  font-size: 1.25rem;
 }
 .Btn-region.active {
-  background-color: #bada55 !important;
+  background-color: #B3DD4F !important;
 }
 .Btn-region {
   background-color: darkgray !important;
@@ -107,4 +108,68 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* h1, .h1 {
+  font-size: 3rem;
+} */
+
+h2, .h2 {
+  font-size: 1.25rem;
+}
+
+.bg-teva-green {
+  background-color: #004B3F;
+}
+
+.bg-teva-lime {
+  background-color: #B3DD4F;
+}
+
+.bg-teva-sand {
+  background-color: #FEF9E7;
+}
+
+.DayPicker-Day--selectedDay {
+  background-color: #004B3F;
+  color: white;
+}
+
+.DayPicker-Day:hover,
+.DayPicker-Day--selectedDay:hover {
+  color: #004B3F;
+}
+
+.rtl .DayPicker-Caption {
+  text-align: right;
+}
+
+.rtl .DayPicker-NavButton {
+  left: 1.5em;
+  right: auto;
+  transform: rotate(180deg);
+}
+
+.rtl .DayPicker-NavButton--prev {
+  margin-left: 1.5em;
+  margin-right: auto;
+}
+
+.navbar-light a.nav-link {
+  color: #004B3F;
+}
+
+.rtl .btn-group > .btn:not(:first-child), 
+.rtl .btn-group > .btn-group:not(:first-child) > .btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+
+.rtl .btn-group > .btn:not(:last-child):not(.dropdown-toggle), 
+.rtl .btn-group > .btn-group:not(:last-child) > .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
