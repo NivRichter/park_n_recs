@@ -136,7 +136,8 @@ h2, .h2 {
 }
 
 .DayPicker-Day:hover,
-.DayPicker-Day--selectedDay:hover {
+.DayPicker-Day--selectedDay:hover,
+.DayPicker-Day--selected:hover {
   color: #004B3F;
 }
 
@@ -157,6 +158,10 @@ h2, .h2 {
 
 .navbar-light a.nav-link {
   color: #004B3F;
+}
+
+a.nav-link.active {
+  font-weight: bold;
 }
 
 .rtl .btn-group > .btn:not(:first-child), 
