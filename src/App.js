@@ -39,7 +39,6 @@ class App extends Component {
   }
 
   changeTab(tab) {
-    console.log("changing activeTab to " + tab);
     this.setState({ activeTab: tab });
   }
 
