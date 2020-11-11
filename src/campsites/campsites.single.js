@@ -29,7 +29,6 @@ class SingleDayCampsites extends Component {
   }
 
   handleDayClick(day) {
-    console.log("handleDayClick " + day);
     this.setState({ selectedDay: day });
     this.setState({
       selectedDayKey: "date-" + dayjs(day).format("YYYY-MM-DD"),
@@ -40,13 +39,11 @@ class SingleDayCampsites extends Component {
       .child("days/date-" + dayjs(day).format("YYYY-MM-DD"))
       .once("value", (snapshot) => {
         const sites = snapshot.val();
-        console.log(sites);
         this.setState({ sites: sites });
       });
 
     this.campsitesRef.child("lastUpdate").once("value", (snapshot) => {
       const lastUpdate = snapshot.val();
-      console.log(lastUpdate);
       this.setState({ lastUpdate: lastUpdate });
     });
   }
