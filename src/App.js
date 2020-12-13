@@ -31,6 +31,7 @@ class App extends Component {
       debug: false,
     });
     ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.event({category: 'ganleumi.online', action: 'app init'})
 
     this.state = {
       activeTab: "parks",
@@ -40,6 +41,11 @@ class App extends Component {
 
   changeTab(tab) {
     this.setState({ activeTab: tab });
+    ReactGA.event({
+      category: 'ganleumi.online',
+      action: 'navigation - ' + tab,
+      label: `change view to ${tab} tab`
+    });
   }
 
   render() {
@@ -99,14 +105,15 @@ class App extends Component {
               <Col>
                 <div className="my-2">
                   לכל אתרי התיירות ומידע נוסף -{" "}
-                  <a
-                    href="https://www.parks.org.il/%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA-%D7%9C%D7%90%D7%AA%D7%A8%D7%99%D7%9D/"
+                  <ReactGA.OutboundLink
+                    eventLabel="goTo NPA website"
+                    to="https://www.parks.org.il/%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA-%D7%9C%D7%90%D7%AA%D7%A8%D7%99%D7%9D/"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     {" "}
                     אתר רשות הטבע והגנים{" "}
-                  </a>
+                  </ReactGA.OutboundLink>
                 </div>
                 <div className="my-2">
                   <span>
@@ -115,13 +122,14 @@ class App extends Component {
                     </span>{" "}
                     לאן נטייל מחר הוא קצרקוד (פרוייקט מהיר) שנבנה בעקבות{" "}
                   </span>
-                  <a
-                    href="https://twitter.com/amsterdamski2/status/1319278880281169921"
+                  <ReactGA.OutboundLink
+                    eventLabel="goTo Twitter"
+                    to="https://twitter.com/amsterdamski2/status/1319278880281169921"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     ציוץ של @amsterdamski2
-                  </a>
+                  </ReactGA.OutboundLink>
                 </div>
 
                 <div className="my-2">
@@ -131,13 +139,14 @@ class App extends Component {
                     </span>{" "}
                     הפרוייקט בקוד פתוח! מוזמנות ומוזמנים להציע הארות והערות{" "}
                   </span>
-                  <a
-                    href="https://github.com/NivRichter/park_n_recs"
+                  <ReactGA.OutboundLink
+                    eventLabel="goTo GitHub repo"
+                    to="https://github.com/NivRichter/park_n_recs"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     בעמוד הגיטהאב של הפרוייקט
-                  </a>
+                  </ReactGA.OutboundLink>
                 </div>
 
                 <div className="my-2">

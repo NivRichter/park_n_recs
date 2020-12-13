@@ -1,7 +1,7 @@
 {
-  "homepage": "http://nivrichter.github.io/parks",
+  "homepage": "https://parks-n-rec-4b77b.web.app/",
   "name": "parks_n_recs",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -10,9 +10,6 @@
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "dayjs": "^1.9.5",
-    "firebase": "^8.0.0",
-    "firebase-admin": "^9.3.0",
-    "firebase-functions": "^3.11.0",
     "fuse.js": "^6.4.3",
     "gh-pages": "^3.1.0",
     "moment": "^2.29.1",

@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import FirebaseAdmin from "../firebase";
 import DayPicker from "react-day-picker";
 import MomentLocaleUtils from "react-day-picker/moment";
 import * as dayjs from "dayjs";
 import "dayjs/locale/he";
 import { Container, Row, Col, Alert } from "react-bootstrap";
+import ReactGA from "react-ga";
 import { CAMPSITES_METADATA } from "./constants";
+import axios from 'axios';
 
 class SingleDayCampsites extends Component {
   constructor(props) {
@@ -22,29 +23,34 @@ class SingleDayCampsites extends Component {
       locale: "he",
       after: after,
     };
-    
+
     this.handleDayClick = this.handleDayClick.bind(this);
-    this.campsitesRef = FirebaseAdmin.database().ref("worker/latest");
-    this.handleDayClick(this.state.selectedDay);
+    ReactGA.pageview('/campsites');
+  }
+
+  componentDidMount() {
+    // axios.get('https://ganleumi-campsites-latest.riido.workers.dev/latest')
+    axios.get('https://ganleumi.riido.workers.dev/campsites')
+    .then(response => {
+      if(response.status === 200 && response.data) {
+        this.setState({latest: response.data});
+        this.handleDayClick(this.state.selectedDay);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 
   handleDayClick(day) {
     this.setState({ selectedDay: day });
     this.setState({
-      selectedDayKey: "date-" + dayjs(day).format("YYYY-MM-DD"),
+      selectedDayKey: 'date-' + dayjs(day).format("YYYY-MM-DD"),
     });
 
-    this.setState({ sites: {} });
-    this.campsitesRef
-      .child("days/date-" + dayjs(day).format("YYYY-MM-DD"))
-      .once("value", (snapshot) => {
-        const sites = snapshot.val();
-        this.setState({ sites: sites });
-      });
-
-    this.campsitesRef.child("lastUpdate").once("value", (snapshot) => {
-      const lastUpdate = snapshot.val();
-      this.setState({ lastUpdate: lastUpdate });
+    ReactGA.event({
+      category: 'ganleumi.online',
+      action: 'campsites - change date'
     });
   }
 
@@ -82,14 +88,15 @@ class SingleDayCampsites extends Component {
                 <span>זמינות חניוני לילה ביום </span>
                 <span>{this.formattedDayAndDate()}</span>
               </strong>
-              {this.state.sites
-                ? Object.keys(this.state.sites).map((campId) => {
+              {this.state.latest?.days[this.state.selectedDayKey]
+                ? Object.keys(this.state.latest.days[this.state.selectedDayKey]).map((campId) => {
+                    const site = this.state.latest?.days[this.state.selectedDayKey][campId];
                     return (
                       <div
                         key={campId}
                         className={
                           "py-1 " +
-                          (this.state.sites[campId].SumRoomsForSale <= 0
+                          (site.SumRoomsForSale <= 0
                             ? "text-muted"
                             : "")
                         }
@@ -99,17 +106,21 @@ class SingleDayCampsites extends Component {
                           role="img"
                           aria-label="Tent emoji"
                         >
-                          {this.state.sites[campId].SumRoomsForSale > 0
+                          {site.SumRoomsForSale > 0
                             ? "⛺"
                             : "✖️"}
                         </span>
                         <span>{CAMPSITES_METADATA[campId].name} - </span>
-                        {this.state.sites[campId].SumRoomsForSale > 0 ? (
-                          <a
-                            href={CAMPSITES_METADATA[campId].url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >{`${this.state.sites[campId].SumRoomsForSale} מקומות`}</a>
+                        {site.SumRoomsForSale > 0 ? (
+                          <span>
+                            <ReactGA.OutboundLink
+                              eventLabel={`goTo campsite ${campId} - ${CAMPSITES_METADATA[campId].name}`}
+                              onClick={() => ReactGA.event({category: 'ganleumi.online', action: 'campsites - click', label: `goTo campsite ${campId} - ${CAMPSITES_METADATA[campId].name}`, value: campId})}
+                              to={CAMPSITES_METADATA[campId].url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >{`${site.SumRoomsForSale} מקומות`}</ReactGA.OutboundLink>
+                          </span>
                         ) : (
                           <span>אין מקומות</span>
                         )}
@@ -121,10 +132,12 @@ class SingleDayCampsites extends Component {
           </Row>
           <Row>
             <Col className="my-4">
-              <Alert variant="success">
-                <span>עדכון אחרון: </span>
-                <span>{this.formatDayDateTime(this.state.lastUpdate)}</span>
-              </Alert>
+              { this.state.latest?.lastUpdate ? (
+                <Alert variant="success">
+                  <span>עדכון אחרון: </span>
+                  <span>{this.formatDayDateTime(this.state.latest.lastUpdate)}</span>
+                </Alert>
+              ) : '' }
 
               <Alert variant="warning">
                 שימו לב! לחלק מהחניונים יש מינימום 2 לילות
