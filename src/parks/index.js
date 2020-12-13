@@ -3,6 +3,7 @@ import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import MomentLocaleUtils from "react-day-picker/moment";
 import "moment/locale/he";
+import ReactGA from "react-ga";
 import { PARKS_METADATA } from "./constants";
 import {
   Container,
@@ -221,15 +222,20 @@ class Parks extends Component {
           sitesTable[region].push({
             name: name,
             element: (
-              <a href={url} className="hyperLink"
-              key={id}>
+              <ReactGA.OutboundLink 
+                eventLabel={`goTo park ${id} - ${name}`} 
+                onClick={() => ReactGA.event({category: 'ganleumi.online', action: 'parks - click', label: `goTo park ${id} - ${name}`, value: id})}
+                to={url} 
+                target="_blank"
+                className="hyperLink" 
+                key={id}>
                 <div
                   className="card w3-blue"
                   style={{ backgroundImage: "url(" + background + ")" }}
                 >
                   <span className="hyperLink">{name}</span>
                 </div>
-              </a>
+              </ReactGA.OutboundLink>
             ),
           });
         }
